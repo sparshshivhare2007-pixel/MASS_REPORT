@@ -41,8 +41,8 @@ Deploy karne se pehle ye variables set karein:
 VPS par terminal open karein aur ye commands run karein:
 ```bash
 # Repo clone karein
-git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/yourusername/your-repo-name.git)
-cd your-repo-name
+git clone [https://github.com/sparshshivhare2007-pixel/MASS_REPORT.git](https://github.com/sparshshivhare2007-pixel/MASS_REPORT.git)
+cd MASS_REPORT
 
 # Requirements install karein
 pip3 install -r requirements.txt
@@ -52,6 +52,10 @@ nano .env
 
 # Bot run karein
 python3 main.py
+
+
+
+
 📖 How to Use?
 Bot Start Karein: /start likhein (Sirf Admin hi use kar sakta hai).
 
