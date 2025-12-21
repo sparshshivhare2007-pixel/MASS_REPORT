@@ -1,3 +1,5 @@
+Markdown
+
 # 🚀 Mass Report Telegram Bot
 
 Ek powerful Telegram bot jo multiple String Sessions ka use karke kisi bhi Channel, Group, ya User par mass reporting coordinate karta hai. Iska use spam, scams, aur illegal content ko down karne ke liye kiya ja sakta hai.
@@ -39,8 +41,8 @@ Deploy karne se pehle ye variables set karein:
 VPS par terminal open karein aur ye commands run karein:
 ```bash
 # Repo clone karein
-git clone [https://github.com/sparshshivhare2007-pixel/MASS_REPORT](https://github.com/sparshshivhare2007-pixel/MASS_REPORT.git)
-cd MASS_REPORT
+git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/yourusername/your-repo-name.git)
+cd your-repo-name
 
 # Requirements install karein
 pip3 install -r requirements.txt
@@ -50,3 +52,42 @@ nano .env
 
 # Bot run karein
 python3 main.py
+📖 How to Use?
+Bot Start Karein: /start likhein (Sirf Admin hi use kar sakta hai).
+
+Accounts Add Karein:
+
+/make_config likhein.
+
+Apne String Sessions (Telethon) paste karke bhejte rahein.
+
+Sab bhej dene ke baad /done likhein.
+
+Attack Karein:
+
+/attack @target_username likhein.
+
+Bot automatically database se saare accounts uthayega aur report karna shuru kar dega.
+
+Manage DB:
+
+/status se check karein kitne accounts hain.
+
+/clean_db se purane sessions delete karein.
+
+⚠️ Disclaimer
+Ye bot sirf Ethical Use (Scams aur Illegal content ke khilaaf) ke liye banaya gaya hai. Kisi bhi genuine person ya channel ko pareshan karne ke liye iska use na karein. Telegram aapka account aur bot ban kar sakta hai agar aap galat mass reporting karte hain.
+
+
+---
+
+### Kuch Extra Tips aapke liye:
+
+1.  **Procfile (For Heroku):** Heroku ke liye aapko ek file banani hogi jiska naam ho `Procfile` (bina kisi extension ke) aur usme ye likhna:
+    `worker: python3 main.py`
+2.  **String Session:** Aapne dhyan rakha hoga ki aapka bot **Telethon** use kar raha hai, isliye sessions bhi Telethon generator se hi nikaalna.
+3.  **Deployment:** VPS par ise hamesha chalte rehne ke liye `screen` ya `pm2` ka use karein.
+
+
+
+Aapka bot ab puri tarah taiyar hai! Kya aapko GitHub par repo banane ya Heroku par connect karne mein koi dikat aa rahi hai?
