@@ -40,7 +40,7 @@ VPS par terminal open karein aur ye commands run karein:
 ```bash
 # Repo clone karein
 git clone [https://github.com/sparshshivhare2007-pixel/MASS_REPORT](https://github.com/sparshshivhare2007-pixel/MASS_REPORT.git)
-cd your-repo-name
+cd MASS_REPORT
 
 # Requirements install karein
 pip3 install -r requirements.txt
