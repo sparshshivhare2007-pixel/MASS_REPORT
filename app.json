@@ -1,0 +1,40 @@
+{
+  "name": "Mass Report Telegram Bot",
+  "description": "Telegram Mass Reporting Bot using Telethon and MongoDB.",
+  "keywords": ["telegram", "report", "mass-report", "telethon", "bot"],
+  "repository": "https://github.com/sparshshivhare2007-pixel/MASS_REPORT",
+  "logo": "https://www.gstatic.com/images/branding/product/2x/telegram_64dp.png",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Bot Token from @BotFather",
+      "required": true
+    },
+    "API_ID": {
+      "description": "API ID from my.telegram.org",
+      "required": true
+    },
+    "API_HASH": {
+      "description": "API Hash from my.telegram.org",
+      "required": true
+    },
+    "MONGO_URL": {
+      "description": "MongoDB Atlas connection string",
+      "required": true
+    },
+    "ADMIN_ID": {
+      "description": "Your numeric Telegram User ID",
+      "required": true
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
