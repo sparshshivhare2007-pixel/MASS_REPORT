@@ -39,7 +39,7 @@ Deploy karne se pehle ye variables set karein:
 VPS par terminal open karein aur ye commands run karein:
 ```bash
 # Repo clone karein
-git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/yourusername/your-repo-name.git)
+git clone [https://github.com/sparshshivhare2007-pixel/MASS_REPORT](https://github.com/sparshshivhare2007-pixel/MASS_REPORT.git)
 cd your-repo-name
 
 # Requirements install karein
