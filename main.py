@@ -10,63 +10,74 @@ from telethon.tl.types import InputReportReasonChildAbuse, InputReportReasonSpam
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-# Setup
+# Environment Variables Load Karein
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-# Configs
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 API_ID = int(os.getenv('API_ID'))
 API_HASH = os.getenv('API_HASH')
 MONGO_URL = os.getenv('MONGO_URL')
 ADMIN_ID = int(os.getenv('ADMIN_ID'))
 
-# Database
-client_db = pymongo.MongoClient(MONGO_URL)
-db = client_db['mass_report_db']
+# MongoDB Setup
+db_client = pymongo.MongoClient(MONGO_URL)
+db = db_client['report_bot_db']
 sessions_col = db['sessions']
 
 # --- COMMAND: /make_config [string_session] ---
+# Isse aap naye accounts bot mein add karenge
 async def make_config(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID: return
     
     if not context.args:
-        await update.message.reply_text("❌ Usage: `/make_config [STRING_SESSION]`")
+        await update.message.reply_text("❌ Usage: `/make_config [STRING_SESSION_YAHAN_DALEIN]`")
         return
 
     session_str = context.args[0]
+    await update.message.reply_text("⏳ Session check ho raha hai...")
+    
     try:
-        # Session check karna
+        # Telethon client se check karna ki session working hai ya nahi
         temp_client = TelegramClient(StringSession(session_str), API_ID, API_HASH)
         await temp_client.connect()
+        
         if await temp_client.is_user_authorized():
             me = await temp_client.get_me()
-            # Database mein save
+            # Database mein save karna
             if not sessions_col.find_one({"session": session_str}):
-                sessions_col.insert_one({"session": session_str, "user": me.first_name})
-                await update.message.reply_text(f"✅ Session Saved: {me.first_name}")
+                sessions_col.insert_one({
+                    "session": session_str, 
+                    "user_name": me.first_name,
+                    "user_id": me.id
+                })
+                await update.message.reply_text(f"✅ Account Added: {me.first_name} (ID: {me.id})")
             else:
-                await update.message.reply_text("⚠️ Ye session pehle se added hai.")
+                await update.message.reply_text("⚠️ Ye session pehle se database mein hai.")
+        else:
+            await update.message.reply_text("❌ Session expire ho chuka hai ya galat hai.")
+        
         await temp_client.disconnect()
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {str(e)}")
 
-# --- COMMAND: /attack [Target_Username/Link] ---
+# --- COMMAND: /attack [Username/Link] ---
+# Isse sabhi saved accounts se report jayegi
 async def attack(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID: return
+    
     if not context.args:
         await update.message.reply_text("❌ Usage: `/attack @target_username`")
         return
 
     target = context.args[0]
     all_sessions = list(sessions_col.find())
-    total_acc = len(all_sessions)
-
-    if total_acc == 0:
-        await update.message.reply_text("❌ Pehle /make_config se sessions add karein!")
+    
+    if not all_sessions:
+        await update.message.reply_text("❌ Database khali hai! Pehle /make_config se accounts add karein.")
         return
 
-    await update.message.reply_text(f"🚀 Attack Started on {target} using {total_acc} accounts...")
+    await update.message.reply_text(f"🚀 Attack shuru! {len(all_sessions)} accounts se report bhej raha hoon...")
 
     success = 0
     for data in all_sessions:
@@ -74,36 +85,38 @@ async def attack(update: Update, context: ContextTypes.DEFAULT_TYPE):
             client = TelegramClient(StringSession(data['session']), API_ID, API_HASH)
             await client.connect()
             
-            # Reporting Logic
+            # Target ko report karna
             peer = await client.get_entity(target)
             await client(ReportRequest(
                 peer=peer,
-                id=[1], # Common report
-                reason=InputReportReasonChildAbuse(),
-                message="Reported for illegal activity and CSAM content."
+                id=[1], 
+                reason=InputReportReasonChildAbuse(), # Sabse fast action ke liye
+                message="Violating safety terms and spreading CSAM content."
             ))
             success += 1
             await client.disconnect()
-            await asyncio.sleep(3) # Ban se bachne ke liye delay
+            await asyncio.sleep(2) # Flood avoid karne ke liye chhota delay
         except Exception as e:
-            logging.error(f"Failed session: {e}")
+            logging.error(f"Account failed: {e}")
             continue
 
-    await update.message.reply_text(f"🏁 Attack Finished!\n✅ Successful Reports: {success}/{total_acc}")
+    await update.message.reply_text(f"🏁 Attack Finished!\n✅ Successful Reports: {success}/{len(all_sessions)}")
 
 # --- COMMAND: /status ---
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != ADMIN_ID: return
     count = sessions_col.count_documents({})
-    await update.message.reply_text(f"📊 Total Sessions in DB: {count}")
+    await update.message.reply_text(f"📊 Total Active Accounts: {count}")
 
-# Main Runner
+# Main Engine
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
+    
     app.add_handler(CommandHandler("make_config", make_config))
     app.add_handler(CommandHandler("attack", attack))
     app.add_handler(CommandHandler("status", status))
-    print("Mass Report Bot is Running...")
+    
+    print("Bot chalu hai... Admin ID se commands dein.")
     app.run_polling()
 
 if __name__ == '__main__':
